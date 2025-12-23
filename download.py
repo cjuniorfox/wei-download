@@ -59,12 +59,9 @@ def prepare_download_list(urls):
 def rename_donwloaded_file(item, path):
     try:
         filename = os.path.basename(path) if path else None
-        '''WEI FANSUB - MY_DEAR_DONOVAN_EP01.mp4'''
-        #1. Remove prefix
-        if filename and filename.startswith("WEI FANSUB - "):
-            filename = filename.replace("WEI FANSUB - ", "")
+        '''WEI FANSUB - MY_DEAR_DONOVAN _ EP01.mp4'''
         #2. Get episode title
-        title=filename.split("_ EP")[0]
+        title=filename.split("WEI FANSUB -")[1].split("_ EP")[0].strip()
         #3. Get episode number from title
         episode=filename.split("_ EP")[1].split('.')[0]
         #4. Get file extension
@@ -74,7 +71,7 @@ def rename_donwloaded_file(item, path):
             title = title.replace("_", " ")
         #6. Capitalize
         if title:
-            title = title.capitalize()
+            title = " ".join([i.capitalize() for i in title.split()])
     except Exception as e:
         print(f"Error renaming file {filename}: {e}")
         return
