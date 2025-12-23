@@ -61,11 +61,19 @@ def rename_donwloaded_file(path, season):
         filename = os.path.basename(path) if path else None
         '''WEI FANSUB - MY_DEAR_DONOVAN _ EP01.mp4'''
         #2. Get episode title
-        title=filename.split("WEI FANSUB -")[1].split("_ EP")[0].strip()
-        #3. Get episode number from title
-        episode=filename.split("_ EP")[1].split('.')[0]
-        #4. Get file extension
-        extension=filename.split("_ EP")[1].split('.')[1]
+        try:
+            title=filename.split("WEI FANSUB -")[1].split("_ EP")[0].strip()
+            #3. Get episode number from title
+            episode=filename.split("_ EP")[1].split('.')[0]
+            #4. Get file extension
+            extension=filename.split("_ EP")[1].split('.')[1]
+        except Exception as e:
+            # Fallback for filenames without space before EP
+            title=filename.split("WEI FANSUB -")[1].split("_EP")[0].strip()
+            #3. Get episode number from title
+            episode=filename.split("_EP")[1].split('.')[0]
+            #4. Get file extension
+            extension=filename.split("_EP")[1].split('.')[1]
         #5. Replace underscores with spaces
         if title:
             title = title.replace("_", " ")
