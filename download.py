@@ -103,7 +103,6 @@ if __name__ == "__main__":
     args = argparser.parse_args()
     base_url = args.url
     #
-    base_url = "https://weifansub.com.br/2022/08/15/my-dear-donovan/"
     urls = read_urls(base_url)
     filtered = filter_google_drive(urls)
     download_list = prepare_download_list(filtered)
