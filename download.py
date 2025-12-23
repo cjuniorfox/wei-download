@@ -56,7 +56,7 @@ def prepare_download_list(urls):
                 })
     return download_list
 
-def rename_donwloaded_file(item, path):
+def rename_donwloaded_file(path, season):
     try:
         filename = os.path.basename(path) if path else None
         '''WEI FANSUB - MY_DEAR_DONOVAN _ EP01.mp4'''
@@ -77,7 +77,7 @@ def rename_donwloaded_file(item, path):
         return
         
     # 7. Create new filename
-    new_filename = f"{title} - S01E{episode.zfill(2)}.{extension}"
+    new_filename = f"{title} - S{str(season).zfill(2)}E{episode.zfill(2)} Wei Fansubs.{extension}"
     
     # 8. Create directory with title if not exists
     directory = title
@@ -88,10 +88,10 @@ def rename_donwloaded_file(item, path):
         new_path = os.path.join(os.path.join(os.path.dirname(path), directory), new_filename)
         os.rename(path, new_path)
 
-def download_files(download_list):
+def download_files(download_list, season=1):
     for item in download_list:
         path = download_file_from_google_drive(item['file_id'])
-        rename_donwloaded_file(item, path)        
+        rename_donwloaded_file(path, season)        
         
 def delete_zip_file(file_path):
     os.remove(file_path)
@@ -99,6 +99,7 @@ def delete_zip_file(file_path):
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(description="Download files from Weifansub Google Drive links.")
     argparser.add_argument("url", type=str, help="The base URL of the Weifansub post.")
+    argparser.add_argument("--season", "-s", type=int, default=1, help="Season number for renaming files.")
     args = argparser.parse_args()
     base_url = args.url
     #
@@ -106,5 +107,5 @@ if __name__ == "__main__":
     urls = read_urls(base_url)
     filtered = filter_google_drive(urls)
     download_list = prepare_download_list(filtered)
-    download_files(download_list)
-    print(json.dumps(download_list, ensure_ascii=False, indent=4))
+    download_files(download_list, season=args.season)
+    print("All files downloaded.")

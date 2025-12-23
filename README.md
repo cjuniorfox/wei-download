@@ -1,6 +1,6 @@
 # WEI Fansubs Downloader
 
-Downloads and renames episodes from WEI Fansubs website's Google Drive links.
+Downloads and renames episodes from WEI Fansubs website Google Drive links.
 
 ## Requirements
 
@@ -21,7 +21,7 @@ pip install -r requirements.txt
 python read_urls.py
 ```
 
-Downloads files to the current directory and renames them to a clean format (e.g., `My Dear Donovan S01E01.mp4`).
+Downloads files to the current directory and renames them to a clean format (e.g., My Dear Donovan S01E01.mp4).
 
 ### Docker/Podman
 
@@ -45,11 +45,11 @@ docker run --rm -v "$(pwd):/data" weifansubs
 
 ## What It Does
 
-1. Scrapes episode links from WEI Fansubs pages
-2. Downloads video files from Google Drive
-3. Renames files to: `<Title> S01E<Episode>.<ext>`
-4. Removes "WEI FANSUB - " prefix and normalizes formatting
+- Scrapes episode links from WEI Fansubs pages
+- Downloads video files from Google Drive
+- Renames files to a normalized pattern (e.g., Title S01E01.ext)
+- Normalizes formatting (removes prefixes, replaces underscores, proper casing)
 
 ## Configuration
 
-Edit the `base_url` in `read_urls.py` to change the series being downloaded.
+Edit the `base_url` in `read_urls.py` to change the series page being downloaded.
