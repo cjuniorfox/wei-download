@@ -95,10 +95,15 @@ def rename_donwloaded_file(path, season):
         new_path = os.path.join(os.path.join(os.path.dirname(path), directory), new_filename)
         os.rename(path, new_path)
 
-def download_files(download_list, season=1):
+def download_files(download_list, season=1, episode=None):
+    count = 0
     for item in download_list:
+        count = count + 1
+        if episode and count != episode:
+            continue
         path = download_file_from_google_drive(item['file_id'])
-        rename_donwloaded_file(path, season)        
+        rename_donwloaded_file(path, season)
+        
         
 def delete_zip_file(file_path):
     os.remove(file_path)
@@ -107,11 +112,12 @@ if __name__ == "__main__":
     argparser = argparse.ArgumentParser(description="Download files from Weifansub Google Drive links.")
     argparser.add_argument("url", type=str, help="The base URL of the Weifansub post.")
     argparser.add_argument("--season", "-s", type=int, default=1, help="Season number for renaming files.")
+    argparser.add_argument("--episode", "-e", type=int, help="Download only a specific episode.")
     args = argparser.parse_args()
     base_url = args.url
     #
     urls = read_urls(base_url)
     filtered = filter_google_drive(urls)
     download_list = prepare_download_list(filtered)
-    download_files(download_list, season=args.season)
+    download_files(download_list, season=args.season, episode=args.episode)
     print("All files downloaded.")

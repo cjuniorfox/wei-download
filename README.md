@@ -40,7 +40,7 @@ docker build -t weifansubs -f Containerfile .
 Run (downloads to current directory):
 
 ```bash
-docker run --rm -v "$(pwd):/data" weifansubs
+docker run --rm -v "$(pwd):/data" weifansubs [URL] [--season 1] [--episode 14] 
 ```
 
 ## What It Does
@@ -49,7 +49,3 @@ docker run --rm -v "$(pwd):/data" weifansubs
 - Downloads video files from Google Drive
 - Renames files to a normalized pattern (e.g., Title S01E01.ext)
 - Normalizes formatting (removes prefixes, replaces underscores, proper casing)
-
-## Configuration
-
-Edit the `base_url` in `read_urls.py` to change the series page being downloaded.
