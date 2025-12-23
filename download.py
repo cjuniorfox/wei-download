@@ -1,8 +1,8 @@
 from pyquery import PyQuery as pq
 import gdown
-import json
 import os
 import argparse
+import re
 
 def read_urls(base_url):
     content = pq(url=base_url)
@@ -59,39 +59,38 @@ def prepare_download_list(urls):
 def rename_donwloaded_file(path, season):
     try:
         filename = os.path.basename(path) if path else None
-        '''WEI FANSUB - MY_DEAR_DONOVAN _ EP01.mp4'''
-        #2. Get episode title
-        try:
-            title=filename.split("WEI FANSUB -")[1].split("_ EP")[0].strip()
-            #3. Get episode number from title
-            episode=filename.split("_ EP")[1].split('.')[0]
-            #4. Get file extension
-            extension=filename.split("_ EP")[1].split('.')[1]
-        except Exception as e:
-            # Fallback for filenames without space before EP
-            title=filename.split("WEI FANSUB -")[1].split("_EP")[0].strip()
-            #3. Get episode number from title
-            episode=filename.split("_EP")[1].split('.')[0]
-            #4. Get file extension
-            extension=filename.split("_EP")[1].split('.')[1]
-        #5. Replace underscores with spaces
-        if title:
-            title = title.replace("_", " ")
-        #6. Capitalize
-        if title:
-            title = " ".join([i.capitalize() for i in title.split()])
+        if not filename:
+            return
+        
+        # Remove "WEI FANSUB -" prefix
+        cleaned = re.sub(r"^WEI FANSUB\s*-\s*", "", filename, flags=re.IGNORECASE)
+        
+        # Match pattern: <title>..EP[0-9][0-9].<ext>
+        match = re.match(r"^(.+?)\s*EP(\d{2})\.(.+)$", cleaned, flags=re.IGNORECASE)
+        if not match:
+            print(f"Could not parse filename: {filename}")
+            return
+        
+        title = match.group(1).strip()
+        episode = match.group(2)
+        extension = match.group(3)
+        
+        # Normalize title: replace underscores/dashes with spaces, capitalize each word
+        title = re.sub(r"[_-]+", " ", title)
+        title = " ".join([word.capitalize() for word in title.split()])
     except Exception as e:
-        print(f"Error renaming file {filename}: {e}")
+        print(f"Error parsing file {filename}: {e}")
         return
         
-    # 7. Create new filename
-    new_filename = f"{title} - S{str(season).zfill(2)}E{episode.zfill(2)} Wei Fansubs.{extension}"
+    # Create new filename
+    new_filename = f"{title} - S{str(season).zfill(2)}E{episode} Wei Fansubs.{extension}"
     
-    # 8. Create directory with title if not exists
+    # Create directory with title if not exists
     directory = title
     if not os.path.exists(directory):
         os.makedirs(directory)
-    # 8. Move and Rename file
+    
+    # Move and rename file
     if filename and path:
         new_path = os.path.join(os.path.join(os.path.dirname(path), directory), new_filename)
         os.rename(path, new_path)
